@@ -44,7 +44,7 @@ class Customer
 
     /**
      *
-     * @ORM\OneToMany(targetEntity="VOrder", mappedBy="customer")
+     * @ORM\OneToMany(targetEntity="VOrder", mappedBy="customer", fetch="EXTRA_LAZY")
      */
     private $orders;
 
