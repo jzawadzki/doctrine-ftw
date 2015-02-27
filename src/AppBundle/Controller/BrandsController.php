@@ -14,9 +14,26 @@ class BrandsController extends Controller
      */
     public function indexAction()
     {
-        $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
-
-        return $this->render('brands/index.html.twig',Array('brands'=>$brands));
+        $em = $this->getDoctrine()->getManager();
+        
+        $ordersQuery = $em->createQuery(
+                "SELECT b.name AS brand, c.name, SUM(o.value) AS total
+                FROM AppBundle:VOrder o
+                LEFT JOIN AppBundle:Brand b WITH b.id = o.brand
+                LEFT JOIN AppBundle:Customer c WITH c.id = o.customer
+                GROUP BY b.id"
+        );           
+        
+        $namesQuery = $em->createQuery(
+                "SELECT con.lastName, c.name
+                FROM AppBundle:Customer c
+                LEFT JOIN AppBundle:Contact con WITH c.id = con.customer
+                GROUP BY con.id"
+        );
+        
+        $ordersData = $ordersQuery->getResult();            
+               
+        return $this->render('brands/index.html.twig',Array('ordersData'=>$ordersData));
     }
 
 

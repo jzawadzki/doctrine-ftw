@@ -22,41 +22,15 @@ class ReportController extends Controller
         );
         
         $totalOrders= $query->getResult();
-        
-        $x = 0;
+
         $years = [];
         foreach ($totalOrders as $item) {
-          $brandsAndValues[ $item['name'] ][] = $item['total'];
-          
-        if ( ! $years[$x - 1] != $item['year']) {
-           $years[$x] = $item['year'];           
-        }
-
-          
-          $x++;
+          $brandsAndValues[ $item['name'] ][] = $item['total'];   
+          if(!in_array($item['year'], $years)) {
+              $years[] = $item['year'];
+          }
         }        
-
-        dump($years);        
     
-        
-//        $orders = $this->getDoctrine()->getRepository('AppBundle:VOrder')->findAll();
-//
-//        $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
-//        $results = Array();
-//
-//        $brands_r=Array();
-//        foreach($brands as $b)
-//            $brands_r[$b->getId()]=0;
-//
-//        foreach ($orders as $o) {
-//            if (!isset($results[$o->getDate()->format("Y")]))
-//                $results[$o->getDate()->format("Y")] = $brands_r;
-//
-//            $results[$o->getDate()->format("Y")][$o->getBrand()->getId()]+=$o->getValue();
-//        }
-//        ksort($results);
-//        return $this->render('report/index.html.twig', Array('brands'=>$brands,'results' => $results));        
-        
         return $this->render('report/index.html.twig', Array('brandsAndValues' => $brandsAndValues, 'years' => $years));
         
     }
