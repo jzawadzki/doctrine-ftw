@@ -15,33 +15,50 @@ class ReportController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
-            "SELECT SUBSTRING(o.date, 1, 4) AS year, SUM(o.value), b.name
+            "SELECT SUBSTRING(o.date, 1, 4) AS year, SUM(o.value) AS total, b.name
              FROM AppBundle:Brand b
              LEFT JOIN AppBundle:VOrder o WITH o.brand = b.id
              GROUP BY year, b.id" 
         );
         
-        $totalOrdersByBrans = $query->getResult();
-        var_dump($totalOrdersByBrans);
+        $totalOrders= $query->getResult();
+        
+        $x = 0;
+        $years = [];
+        foreach ($totalOrders as $item) {
+          $brandsAndValues[ $item['name'] ][] = $item['total'];
+          
+        if ( ! $years[$x - 1] != $item['year']) {
+           $years[$x] = $item['year'];           
+        }
+
+          
+          $x++;
+        }        
+
+        dump($years);        
     
         
-        $orders = $this->getDoctrine()->getRepository('AppBundle:VOrder')->findAll();
-
-        $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
-        $results = Array();
-
-        $brands_r=Array();
-        foreach($brands as $b)
-            $brands_r[$b->getId()]=0;
-
-        foreach ($orders as $o) {
-            if (!isset($results[$o->getDate()->format("Y")]))
-                $results[$o->getDate()->format("Y")] = $brands_r;
-
-            $results[$o->getDate()->format("Y")][$o->getBrand()->getId()]+=$o->getValue();
-        }
-        ksort($results);
-        return $this->render('report/index.html.twig', Array('brands'=>$brands,'results' => $results));
+//        $orders = $this->getDoctrine()->getRepository('AppBundle:VOrder')->findAll();
+//
+//        $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
+//        $results = Array();
+//
+//        $brands_r=Array();
+//        foreach($brands as $b)
+//            $brands_r[$b->getId()]=0;
+//
+//        foreach ($orders as $o) {
+//            if (!isset($results[$o->getDate()->format("Y")]))
+//                $results[$o->getDate()->format("Y")] = $brands_r;
+//
+//            $results[$o->getDate()->format("Y")][$o->getBrand()->getId()]+=$o->getValue();
+//        }
+//        ksort($results);
+//        return $this->render('report/index.html.twig', Array('brands'=>$brands,'results' => $results));        
+        
+        return $this->render('report/index.html.twig', Array('brandsAndValues' => $brandsAndValues, 'years' => $years));
+        
     }
 
     /**

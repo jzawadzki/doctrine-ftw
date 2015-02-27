@@ -3,18 +3,22 @@
 {% block body %}
 <h1>Report</h1>
    <table class="table table-border">
-       <tr><th>Year</th>
-           {% for brand in brands %}
-               <th>{{ brand.name }}</th>
+       
+       <tr>
+           <th> Y/B </th>
+           {% for year in years %}
+                <td> {{ year }} </td>
            {% endfor %}
        </tr>
-       {% for year,r in results %}
-           <tr>
-               <th>{{ year }}</th>
-           {% for v in r %}
-            <td>${{ v|number_format(2) }}</td>
-           {% endfor %}
-           </tr>
-       {% endfor %}
+       {% for key, value in brandsAndValues %}   
+        <tr>
+             <th> {{ key }} </th>  
+             {% for k, v in value %}
+                <td> {{ v }} </td>
+             {% endfor %}
+        </tr>
+       {% endfor %}           
+
+       
    </table>
 {% endblock %}
