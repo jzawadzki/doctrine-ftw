@@ -16,7 +16,7 @@ class BrandsController extends Controller
     {
         $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
 
-        return $this->render('brands/index.html.twig',Array('brands'=>$brands));
+        return $this->render('brands/index.html.twig', array('brands'=>$brands));
     }
 
 

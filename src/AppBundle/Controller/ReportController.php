@@ -13,23 +13,10 @@ class ReportController extends Controller
      */
     public function indexAction()
     {
-        $orders = $this->getDoctrine()->getRepository('AppBundle:VOrder')->findAll();
+        $brands  = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
+        $results = $this->getDoctrine()->getRepository('AppBundle:VOrder')->getBrandByYearReport();
 
-        $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
-        $results = Array();
-
-        $brands_r=Array();
-        foreach($brands as $b)
-            $brands_r[$b->getId()]=0;
-
-        foreach ($orders as $o) {
-            if (!isset($results[$o->getDate()->format("Y")]))
-                $results[$o->getDate()->format("Y")] = $brands_r;
-
-            $results[$o->getDate()->format("Y")][$o->getBrand()->getId()]+=$o->getValue();
-        }
-        ksort($results);
-        return $this->render('report/index.html.twig', Array('brands'=>$brands,'results' => $results));
+        return $this->render('report/index.html.twig', array('brands' => $brands, 'results' => $results));
     }
 
     /**
@@ -37,6 +24,6 @@ class ReportController extends Controller
      */
     public function viewAction(Customer $customer)
     {
-        return $this->render('customers/view.html.twig', Array('customer' => $customer));
+        return $this->render('customers/view.html.twig', array('customer' => $customer));
     }
 }
