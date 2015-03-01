@@ -33,8 +33,10 @@ class CustomersController extends Controller
      * @Method({"POST"})
      */
     public function markOrdersAction(Customer $customer) {
-        foreach($customer->getOrders() as $order)
+        foreach($customer->getOrders() as $order) {
             $order->setStatus('completed');
+        }
+        
         $this->getDoctrine()->getManager()->flush();
         return $this->redirect($this->generateUrl('customers_index'));
     }
