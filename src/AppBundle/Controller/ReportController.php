@@ -13,7 +13,8 @@ class ReportController extends Controller
      */
     public function indexAction()
     {
-        $orders = $this->getDoctrine()->getRepository('AppBundle:VOrder')->findAll();
+        $orders = $this->getDoctrine()->getManager()->createQuery('SELECT SUBSTRING(o.date, 1, 4) as year, b.id as brand_id, b.name as brand_name, sum(o.value) as value FROM AppBundle:VOrder o JOIN o.brand b GROUP BY year, brand_id ORDER BY year, brand_id')
+           ->getResult();
 
         $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
         $results = Array();
@@ -23,10 +24,10 @@ class ReportController extends Controller
             $brands_r[$b->getId()]=0;
 
         foreach ($orders as $o) {
-            if (!isset($results[$o->getDate()->format("Y")]))
-                $results[$o->getDate()->format("Y")] = $brands_r;
+            if (!isset($results[$o['year']]))
+                $results[$o['year']] = $brands_r;
 
-            $results[$o->getDate()->format("Y")][$o->getBrand()->getId()]+=$o->getValue();
+            $results[$o['year']][$o['brand_id']] = $o['value'];
         }
         ksort($results);
         return $this->render('report/index.html.twig', Array('brands'=>$brands,'results' => $results));
