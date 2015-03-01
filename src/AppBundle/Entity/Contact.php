@@ -43,7 +43,7 @@ class Contact
     private $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Customer")
+     * @ORM\ManyToOne(targetEntity="Customer", inversedBy="contacts")
      * @ORM\JoinColumn(name="customer_id", referencedColumnName="id")
      **/
     private $customer;

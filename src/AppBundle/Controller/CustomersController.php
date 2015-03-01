@@ -14,11 +14,13 @@ class CustomersController extends Controller
      */
     public function indexAction()
     {
-        $customers = $this->getDoctrine()->getManager()->createQuery('SELECT c FROM AppBundle:Customer c')
-            ->setMaxResults(50)
-            ->getResult();
+        $customers = $this->getDoctrine()->getManager()->createQuery('SELECT c, count(o) as orders_count FROM AppBundle:Customer c JOIN c.orders o GROUP BY c.id')
+           ->getResult();
 
-        return $this->render('customers/index.html.twig',Array('customers'=>$customers));
+        $contacts = $this->getDoctrine()->getManager()->createQuery('SELECT c.id, MIN(con.email) as email FROM AppBundle:Customer c INDEX BY c.id LEFT JOIN c.contacts con GROUP BY c.id')
+           ->getResult();
+
+        return $this->render('customers/index.html.twig',Array('customers'=>$customers, 'contacts'=>$contacts));
     }
 
     /**
