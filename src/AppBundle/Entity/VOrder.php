@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * VOrder
  *
  * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\VOrderRepository")
  */
 class VOrder
 {
@@ -36,7 +36,7 @@ class VOrder
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Customer")
+     * @ORM\ManyToOne(targetEntity="Customer", inversedBy="orders")
      * @ORM\JoinColumn(name="customer_id", referencedColumnName="id")
      **/
     private $customer;

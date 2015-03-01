@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Customer
  *
  * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Repository\CustomerRepository")
  */
 class Customer
 {
@@ -44,7 +44,7 @@ class Customer
 
     /**
      *
-     * @ORM\OneToMany(targetEntity="VOrder", mappedBy="customer")
+     * @ORM\OneToMany(targetEntity="VOrder", mappedBy="customer", fetch="EXTRA_LAZY")
      */
     private $orders;
 
