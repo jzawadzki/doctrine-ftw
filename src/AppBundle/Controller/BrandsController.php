@@ -16,7 +16,16 @@ class BrandsController extends Controller
     {
         $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
 
-        return $this->render('brands/index.html.twig', array('brands'=>$brands));
+        $results = [];
+        foreach ($brands as $brand) {
+            $array = [];
+            $array[] = $brand;
+            $array[] = $this->getDoctrine()->getRepository('AppBundle:Customer')->getBestCustomerForBrand($brand);
+
+            $results[] = $array;
+        }
+
+        return $this->render('brands/index.html.twig', array('brands' => $results));
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Repository;
 
+use AppBundle\Entity\Brand;
 use AppBundle\Entity\Customer;
 use Doctrine\ORM\EntityRepository;
 
@@ -16,5 +17,13 @@ class CustomerRepository extends EntityRepository
         $query->setParameter('customer', $customer);
 
         return $query->getResult();
+    }
+
+    public function getBestCustomerForBrand(Brand $brand)
+    {
+        $query = $this->_em->createQuery("SELECT c, SUM(o.value) AS HIDDEN value FROM AppBundle:Customer c JOIN c.orders o WHERE o.brand = :brand ORDER BY value DESC");
+        $query->setParameter('brand', $brand);
+
+        return $query->getSingleResult();
     }
 }
