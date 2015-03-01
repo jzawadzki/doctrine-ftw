@@ -36,11 +36,6 @@ class CustomersController extends Controller
     public function markOrdersAction(Customer $customer)
     {
         $this->getDoctrine()->getManager()->getRepository('AppBundle:Customer')->markAllOrdersComplete($customer);
-        /*foreach ($customer->getOrders() as $order) {
-            $order->setStatus('completed');
-        }
-
-        $this->getDoctrine()->getManager()->flush();*/
 
         return $this->redirect($this->generateUrl('customers_view', ['id' => $customer->getId()]));
     }
