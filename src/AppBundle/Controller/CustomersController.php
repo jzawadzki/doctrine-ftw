@@ -14,29 +14,35 @@ class CustomersController extends Controller
      */
     public function indexAction()
     {
-        $customers = $this->getDoctrine()->getManager()->createQuery('SELECT c FROM AppBundle:Customer c')
-            ->setMaxResults(50)
-            ->getResult();
+        $customers = $this->getDoctrine()->getManager()
+            ->createQuery(
+                'select c.id, c.name, co.email, size(c.orders) as orders '
+                . 'from AppBundle:Customer c left join c.contacts co '
+                . 'group by c.id'
+            )
+            ->getArrayResult();
 
-        return $this->render('customers/index.html.twig',Array('customers'=>$customers));
+        return $this->render('customers/index.html.twig', ['customers' => $customers, ]);
     }
 
     /**
      * @Route("/app/customers/view/{id}", name="customers_view")
      */
-    public function viewAction(Customer $customer) {
-        return $this->render('customers/view.html.twig',Array('customer'=>$customer));
+    public function viewAction(Customer $customer)
+    {
+        return $this->render('customers/view.html.twig', ['customer' => $customer]);
     }
 
     /**
      * @Route("/app/customers/view/{id}/markOrders", name="customers_update")
      * @Method({"POST"})
      */
-    public function markOrdersAction(Customer $customer) {
-        foreach($customer->getOrders() as $order) {
+    public function markOrdersAction(Customer $customer)
+    {
+        foreach ($customer->getOrders() as $order) {
             $order->setStatus('completed');
         }
-        
+
         $this->getDoctrine()->getManager()->flush();
         return $this->redirect($this->generateUrl('customers_index'));
     }
