@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\Brand;
 
 /**
  * VOrderRepository
@@ -12,6 +13,9 @@ use Doctrine\ORM\EntityRepository;
  */
 class VOrderRepository extends EntityRepository
 {
+    /**
+     * @return array
+     */
     public function getOrdersSumByYearBrand()
     {
         return $this->getEntityManager()->createQuery(
@@ -22,5 +26,24 @@ class VOrderRepository extends EntityRepository
             ORDER BY year"
         )
         ->getArrayResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function getTopCustomerForBrand(Brand $brand)
+    {
+        $result = $this->getEntityManager()->createQuery(
+            "SELECT sum(o.value) as total_sum, c.name
+            FROM AppBundle:VOrder o
+            LEFT JOIN o.customer c
+            WHERE o.brand = :brand
+            ORDER BY total_sum desc"
+        )
+        ->setParameter('brand', $brand)
+        ->setMaxResults(1)
+        ->getArrayResult();
+
+        return (isset($result[0]['name'])) ? $result[0]['name'] : '';
     }
 }
