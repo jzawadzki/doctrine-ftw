@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Customer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -13,33 +12,29 @@ class ReportController extends Controller
      */
     public function indexAction()
     {
-        $orders = $this->getDoctrine()->getRepository('AppBundle:VOrder')->findAll();
-        $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
+        $orders = $this->getDoctrine()->getManager()->getRepository('AppBundle:VOrder')
+            ->getOrdersSumByYearBrand();
 
-        $results = [];
-        $brands_r = [];
-        foreach($brands as $b) {
-            $brands_r[$b->getId()]=0;
-        }
+        $results    = $this->prepareForView($orders);
+        $brands     = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
 
-        foreach ($orders as $o) {
-            if (! isset($results[$o->getDate()->format("Y")])) {
-                $results[$o->getDate()->format("Y")] = $brands_r;
-            }
-
-            $results[$o->getDate()->format("Y")][$o->getBrand()->getId()] += $o->getValue();
-        }
-
-        ksort($results);
-
-        return $this->render('report/index.html.twig', ['brands'=>$brands,'results' => $results, ]);
+        return $this->render(
+            'report/index.html.twig',
+            ['brands' => $brands, 'results' => $results]
+        );
     }
 
-    /**
-     * @Route("/app/customers/view/{id}", name="customers_view")
-     */
-    public function viewAction(Customer $customer)
+    protected function prepareForView(array $orders)
     {
-        return $this->render('customers/view.html.twig', ['customer' => $customer, ]);
+        $results = [];
+
+        if ($orders && count($orders) > 0) {
+            foreach ($orders as $order) {
+                $year               = (int) $order['year'];
+                $results[$year][]   = $order['orders_sum'];
+            }
+        }
+
+        return $results;
     }
 }
