@@ -3,9 +3,13 @@
 {% block body %}
     <h1>Customers</h1>
     <br />
-<ul>
-    {% for customer in customers %}
-        <li>{{ customer.name }} [Orders: {{ customer.orders.count }}] {% if customer.contacts %}{{ customer.contacts[0].email }}{% endif %} <a href="{{ path('customers_view',{id:customer.id}) }}">view</a></li>
-    {% endfor %}
-</ul>
+    <ul>
+        {% for customer in customers %}
+            <li>
+                {{ customer.name }} [Orders: {{ customer.orders }}] 
+                {{ customer.email }} 
+                <a href="{{ path('customers_view', {id : customer.id}) }}">view</a>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}

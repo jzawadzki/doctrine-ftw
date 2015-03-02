@@ -2,9 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Customer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BrandsController extends Controller
@@ -14,10 +12,19 @@ class BrandsController extends Controller
      */
     public function indexAction()
     {
-        $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
+        $results    = [];
+        $brands     = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
+        $orders     = $this->getDoctrine()->getRepository('AppBundle:VOrder');
 
-        return $this->render('brands/index.html.twig',Array('brands'=>$brands));
+        if ($brands && count($brands) > 0) {
+            foreach ($brands as $brand) {
+                $results[] = [
+                    'brand_name'    => $brand->getName(),
+                    'customer_name' => $orders->getTopCustomerForBrand($brand),
+                ];
+            }
+        }
+
+        return $this->render('brands/index.html.twig', ['results' => $results, ]);
     }
-
-
 }
