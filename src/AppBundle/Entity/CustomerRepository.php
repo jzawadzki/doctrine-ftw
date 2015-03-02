@@ -18,4 +18,18 @@ class CustomerRepository extends EntityRepository
         ->setParameter('customer', $customer)
         ->getResult();
     }
+
+    /**
+     * @return array
+     */
+    public function getCustomers()
+    {
+        return $this->getEntityManager()->createQuery(
+            "SELECT c.id, c.name, co.email, size(c.orders) as orders
+            FROM AppBundle:Customer c
+            LEFT JOIN c.contacts co
+            GROUP BY c.id"
+        )
+        ->getArrayResult();
+    }
 }

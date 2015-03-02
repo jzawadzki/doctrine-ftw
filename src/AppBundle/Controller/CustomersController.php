@@ -14,14 +14,8 @@ class CustomersController extends Controller
      */
     public function indexAction()
     {
-        $customers = $this->getDoctrine()->getManager()
-            ->createQuery(
-                'select c.id, c.name, co.email, size(c.orders) as orders '
-                . 'from AppBundle:Customer c left join c.contacts co '
-                . 'group by c.id'
-            )
-            ->getArrayResult();
-
+        $customers = $this->getDoctrine()->getRepository('AppBundle:Customer')
+            ->getCustomers();
         return $this->render('customers/index.html.twig', ['customers' => $customers, ]);
     }
 
