@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Customer
  *
  * @ORM\Table()
+ * @ORM\Entity
  * @ORM\Entity(repositoryClass="AppBundle\Entity\CustomerRepository")
  */
 class Customer
@@ -142,50 +143,4 @@ class Customer
     }
 
 
-
-    /**
-     * Add contacts
-     *
-     * @param \AppBundle\Entity\Contact $contacts
-     * @return Customer
-     */
-    public function addContact(\AppBundle\Entity\Contact $contacts)
-    {
-        $this->contacts[] = $contacts;
-
-        return $this;
-    }
-
-    /**
-     * Remove contacts
-     *
-     * @param \AppBundle\Entity\Contact $contacts
-     */
-    public function removeContact(\AppBundle\Entity\Contact $contacts)
-    {
-        $this->contacts->removeElement($contacts);
-    }
-
-    /**
-     * Add orders
-     *
-     * @param \AppBundle\Entity\VOrder $orders
-     * @return Customer
-     */
-    public function addOrder(\AppBundle\Entity\VOrder $orders)
-    {
-        $this->orders[] = $orders;
-
-        return $this;
-    }
-
-    /**
-     * Remove orders
-     *
-     * @param \AppBundle\Entity\VOrder $orders
-     */
-    public function removeOrder(\AppBundle\Entity\VOrder $orders)
-    {
-        $this->orders->removeElement($orders);
-    }
 }
