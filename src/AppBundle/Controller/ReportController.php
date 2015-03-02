@@ -12,14 +12,8 @@ class ReportController extends Controller
      */
     public function indexAction()
     {
-        $orders = $this->getDoctrine()->getManager()->createQuery(
-            "SELECT SUBSTRING(o.date, 1, 4) as year, sum(o.value) as orders_sum
-            FROM AppBundle:VOrder o
-            LEFT JOIN o.brand b
-            GROUP BY year, b.id
-            ORDER BY year"
-        )
-        ->getArrayResult();
+        $orders = $this->getDoctrine()->getManager()->getRepository('AppBundle:VOrder')
+            ->getOrdersSumByYearBrand();
 
         $results    = $this->prepareForView($orders);
         $brands     = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();

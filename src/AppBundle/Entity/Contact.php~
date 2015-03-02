@@ -43,7 +43,7 @@ class Contact
     private $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Customer")
+     * @ORM\ManyToOne(targetEntity="Customer", inversedBy="contacts")
      * @ORM\JoinColumn(name="customer_id", referencedColumnName="id")
      **/
     private $customer;
@@ -51,7 +51,7 @@ class Contact
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -74,7 +74,7 @@ class Contact
     /**
      * Get firstName
      *
-     * @return string 
+     * @return string
      */
     public function getFirstName()
     {
@@ -97,7 +97,7 @@ class Contact
     /**
      * Get lastName
      *
-     * @return string 
+     * @return string
      */
     public function getLastName()
     {
@@ -120,7 +120,7 @@ class Contact
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
