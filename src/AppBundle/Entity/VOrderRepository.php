@@ -12,4 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class VOrderRepository extends EntityRepository
 {
+    public function sumValue()
+    {
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT o AS vorder, b, SUM(o.value) AS total, YEAR(o.date) AS year
+            FROM AppBundle:VOrder o
+            JOIN o.brand b
+            GROUP BY b.id, year'
+        );
+
+        return $query->getResult();
+    }
 }

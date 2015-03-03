@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 
 /**
  * BrandRepository
@@ -12,4 +13,22 @@ use Doctrine\ORM\EntityRepository;
  */
 class BrandRepository extends EntityRepository
 {
+    public function findBestCustomer($brand)
+    {
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT o, c, SUM(o.value) AS totalValue
+            FROM AppBundle:VOrder o
+            JOIN o.brand b JOIN o.customer c
+            WHERE o.brand = :brand
+            GROUP BY c.id ORDER BY totalValue DESC'
+        )
+        ->setMaxResults(1)
+        ->setParameter('brand', $brand);
+
+        try {
+            return $query->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            return null;
+        }
+    }
 }

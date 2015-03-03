@@ -14,9 +14,8 @@ class CustomersController extends Controller
      */
     public function indexAction()
     {
-        $customers = $this->getDoctrine()->getManager()->createQuery('SELECT c FROM AppBundle:Customer c')
-            ->setMaxResults(50)
-            ->getResult();
+        $customers = $this->getDoctrine()->getRepository('AppBundle:Customer')
+            ->findAllWithContactsAndOrders();
 
         return $this->render('customers/index.html.twig',Array('customers'=>$customers));
     }

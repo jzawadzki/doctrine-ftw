@@ -12,4 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class CustomerRepository extends EntityRepository
 {
+    public function findAllWithContactsAndOrders()
+    {
+        $query = $this->getEntityManager()->createQuery(
+            'SELECT customer, c, COUNT(o)
+            FROM AppBundle:Customer customer
+            JOIN customer.contacts c JOIN customer.orders o
+            GROUP BY customer.id, c.id'
+        );
+
+        return $query->getResult();
+    }
 }
