@@ -15,8 +15,19 @@ class BrandsController extends Controller
     public function indexAction()
     {
         $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
+        $result = array();
 
-        return $this->render('brands/index.html.twig',Array('brands'=>$brands));
+        foreach ($brands as $brand) {
+            $customer = $this->getDoctrine()->getRepository('AppBundle:Brand')
+                ->findBestCustomer($brand);
+
+            $result[] = array(
+                'brand' => $brand,
+                'customer' => $customer[0]->getCustomer()
+            );
+        }
+
+        return $this->render('brands/index.html.twig',Array('brands'=>$result));
     }
 
 
