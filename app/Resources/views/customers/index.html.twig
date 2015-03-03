@@ -4,8 +4,8 @@
     <h1>Customers</h1>
     <br />
 <ul>
-    {% for customer in customers %}
-        <li>{{ customer.name }} [Orders: {{ customer.orders.count }}] {% if customer.contacts %}{{ customer.contacts[0].email }}{% endif %} <a href="{{ path('customers_view',{id:customer.id}) }}">view</a></li>
+    {% for data in data %}
+        <li>{{ data.customer.name }} [Orders: {{ data.orderCount }}] {% if data.customer.contacts %}{{ data.customer.contacts[0].email }}{% endif %} <a href="{{ path('customers_view',{id:data.customer.id}) }}">view</a></li>
     {% endfor %}
 </ul>
 {% endblock %}

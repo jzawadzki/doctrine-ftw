@@ -14,10 +14,15 @@ class BrandsController extends Controller
      */
     public function indexAction()
     {
-        $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
+        $customerRepo = $this->getDoctrine()->getRepository('AppBundle:Customer');
+        $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAllNames();
 
-        return $this->render('brands/index.html.twig',Array('brands'=>$brands));
+        foreach ($brands as &$brand) {
+            $brand['customer'] = $customerRepo->findBestCustomerName($brand['id']);
+        }
+
+        return $this->render('brands/index.html.twig', Array(
+            'brands' => $brands
+        ));
     }
-
-
 }
