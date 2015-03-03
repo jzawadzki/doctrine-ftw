@@ -14,11 +14,11 @@ class CustomersController extends Controller
      */
     public function indexAction()
     {
-        $customers = $this->getDoctrine()->getManager()->createQuery('SELECT c FROM AppBundle:Customer c')
-            ->setMaxResults(50)
-            ->getResult();
+        $data = $this->getDoctrine()->getRepository('AppBundle:Customer')->findAllForIndex();
 
-        return $this->render('customers/index.html.twig',Array('customers'=>$customers));
+        return $this->render('customers/index.html.twig', Array(
+            'data' => $data
+        ));
     }
 
     /**

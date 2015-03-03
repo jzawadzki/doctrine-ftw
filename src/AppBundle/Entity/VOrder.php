@@ -36,13 +36,13 @@ class VOrder
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Customer")
+     * @ORM\ManyToOne(targetEntity="Customer", inversedBy="orders")
      * @ORM\JoinColumn(name="customer_id", referencedColumnName="id")
      **/
     private $customer;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Brand")
+     * @ORM\ManyToOne(targetEntity="Brand", inversedBy="orders")
      * @ORM\JoinColumn(name="brand_id", referencedColumnName="id")
      **/
     private $brand;

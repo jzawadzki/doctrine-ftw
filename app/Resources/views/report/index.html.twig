@@ -1,20 +1,21 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<h1>Report</h1>
-   <table class="table table-border">
-       <tr><th>Year</th>
-           {% for brand in brands %}
-               <th>{{ brand.name }}</th>
-           {% endfor %}
-       </tr>
-       {% for year,r in results %}
-           <tr>
-               <th>{{ year }}</th>
-           {% for v in r %}
-            <td>${{ v|number_format(2) }}</td>
-           {% endfor %}
-           </tr>
-       {% endfor %}
-   </table>
+    <h1>Report</h1>
+    <table class="table table-border">
+        <tr>
+            <th>Year</th>
+            {% for brand in brands %}
+            <th>{{ brand }}</th>
+            {% endfor %}
+        </tr>
+        {% for year,r in results %}
+        <tr>
+            <th>{{ year }}</th>
+            {% for v in r %}
+                <td>${{ v|number_format(2) }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
 {% endblock %}
