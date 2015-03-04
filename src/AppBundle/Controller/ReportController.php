@@ -13,23 +13,26 @@ class ReportController extends Controller
      */
     public function indexAction()
     {
-        $orders = $this->getDoctrine()->getRepository('AppBundle:VOrder')->findAll();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            "SELECT SUBSTRING(o.date, 1, 4) AS year, SUM(o.value) AS total, b.name
+             FROM AppBundle:Brand b
+             LEFT JOIN AppBundle:VOrder o WITH o.brand = b.id
+             GROUP BY year, b.id" 
+        );
+        
+        $totalOrders= $query->getResult();
 
-        $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
-        $results = Array();
-
-        $brands_r=Array();
-        foreach($brands as $b)
-            $brands_r[$b->getId()]=0;
-
-        foreach ($orders as $o) {
-            if (!isset($results[$o->getDate()->format("Y")]))
-                $results[$o->getDate()->format("Y")] = $brands_r;
-
-            $results[$o->getDate()->format("Y")][$o->getBrand()->getId()]+=$o->getValue();
-        }
-        ksort($results);
-        return $this->render('report/index.html.twig', Array('brands'=>$brands,'results' => $results));
+        $years = [];
+        foreach ($totalOrders as $item) {
+          $brandsAndValues[ $item['name'] ][] = $item['total'];   
+          if(!in_array($item['year'], $years)) {
+              $years[] = $item['year'];
+          }
+        }        
+    
+        return $this->render('report/index.html.twig', Array('brandsAndValues' => $brandsAndValues, 'years' => $years));
+        
     }
 
     /**

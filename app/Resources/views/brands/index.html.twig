@@ -4,8 +4,8 @@
     <h1>Brands</h1>
     <br />
 <ul>
-    {% for brand in brands %}
-        <li>{{ brand.name }}</li>
+    {% for result in results %}
+        <li>{{ result.brand }} ( {{ result.name }} - {{result.total}} )</li>
     {% endfor %}
 </ul>
 {% endblock %}

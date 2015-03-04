@@ -14,9 +14,13 @@ class CustomersController extends Controller
      */
     public function indexAction()
     {
-        $customers = $this->getDoctrine()->getManager()->createQuery('SELECT c FROM AppBundle:Customer c')
-            ->setMaxResults(50)
-            ->getResult();
+        $customers = $this->getDoctrine()->getManager()->createQuery("
+            SELECT c.name, c.id, con.email AS email, COUNT(DISTINCT o.id) AS orders
+            FROM AppBundle:Customer c
+            LEFT JOIN c.contacts con
+            LEFT JOIN c.orders o
+            GROUP BY c.id
+        ")->getResult();
 
         return $this->render('customers/index.html.twig',Array('customers'=>$customers));
     }
