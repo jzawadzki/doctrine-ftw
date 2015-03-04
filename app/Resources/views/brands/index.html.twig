@@ -4,8 +4,8 @@
     <h1>Brands</h1>
     <br />
 <ul>
-    {% for brand in brands %}
-        <li>{{ brand.name }}</li>
+    {% for row in rows %}
+        <li>{{ row.brand.name }} {% if row.customer %}{{row.customer.name}}{% endif %}</li>
     {% endfor %}
 </ul>
 {% endblock %}

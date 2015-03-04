@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * VOrder
  *
  * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\VOrderRepository")
  */
 class VOrder
 {
