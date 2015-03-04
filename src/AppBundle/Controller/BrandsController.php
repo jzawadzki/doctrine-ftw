@@ -17,17 +17,31 @@ class BrandsController extends Controller
         $em = $this->getDoctrine()->getManager();
         
         $ordersQuery = $em->createQuery(
-                "SELECT b.name AS brand, c.name, MAX(DISTINCT o.value) AS total
+                "SELECT b.name AS brand, c.name, MAX(o.value) AS total
                 FROM AppBundle:VOrder o
                 LEFT JOIN o.brand b
                 LEFT JOIN o.customer c
                 GROUP BY b.id, c.id"
-        );                  
+        );           
         
-        $ordersData = $ordersQuery->getResult();            
-               
-        return $this->render('brands/index.html.twig',Array('ordersData'=>$ordersData));
-    }
+        $ordersData = $ordersQuery->getResult();  
+        
+        $results = array();
 
+        foreach($ordersData as $order) {
+            $brand = $order['brand'];
+            $total = $order['total'];
+
+            if(array_key_exists($brand, $results)) {
+                if($results[$brand]['total'] < $total) {
+                    $results[$brand] = $order;
+                }
+            } else {
+                $results[$brand] = $order;
+            }
+        }                                  
+        
+        return $this->render('brands/index.html.twig',Array('results'=>$results));
+    }
 
 }
