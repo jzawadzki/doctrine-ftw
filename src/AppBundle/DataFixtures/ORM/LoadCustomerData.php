@@ -29,9 +29,10 @@ class LoadCustomerData extends AbstractFixture implements OrderedFixtureInterfac
                 $manager->persist($contact);
             }
             $manager->persist($customer);
+            if ($i%20 == 0) {
+                $manager->flush();
+            }
         }
-
-        $manager->flush();
     }
 
     public function getOrder()
