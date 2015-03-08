@@ -4,6 +4,7 @@
 <h1>Report</h1>
    <table class="table table-border">
        <tr><th>Year</th>
+          <th>Total</th> 
            {% for brand in brands %}
                <th>{{ brand.name }}</th>
            {% endfor %}
@@ -11,7 +12,8 @@
        {% for year,r in results %}
            <tr>
                <th>{{ year }}</th>
-           {% for v in r %}
+               <td>${{ r.total|number_format(2) }}</td>
+           {% for v in r.brands %}
             <td>${{ v|number_format(2) }}</td>
            {% endfor %}
            </tr>

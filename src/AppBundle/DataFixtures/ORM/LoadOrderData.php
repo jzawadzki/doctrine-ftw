@@ -15,7 +15,7 @@ class LoadOrderData extends AbstractFixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        for($i=1;$i<=100000;$i++) {
+        for($i=1;$i<=10000;$i++) {
             $order = new VOrder();
             $order->setCustomer($manager->getReference('\AppBundle\Entity\Customer',rand(1,2000)));
             $order->setBrand($manager->getReference('\AppBundle\Entity\Brand',rand(1,100)));
@@ -23,10 +23,11 @@ class LoadOrderData extends AbstractFixture implements OrderedFixtureInterface
             $order->setStatus(rand()%2?'pending':'completed');
             $order->setValue(number_format(rand(10000,20000000)/100,2));
             $manager->persist($order);
+
+            if ($i%20 == 0) {
+                $manager->flush();
+            }
         }
-
-
-        $manager->flush();
     }
 
     public function getOrder()

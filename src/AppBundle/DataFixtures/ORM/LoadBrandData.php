@@ -20,10 +20,10 @@ class LoadBrandData  extends AbstractFixture implements OrderedFixtureInterface
             $brand->setName('Brand #'.$i);
 
             $manager->persist($brand);
+            if ($i%20 == 0) {
+                $manager->flush();
+            }
         }
-
-
-        $manager->flush();
     }
 
     public function getOrder()

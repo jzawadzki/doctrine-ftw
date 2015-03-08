@@ -14,8 +14,7 @@ class BrandsController extends Controller
      */
     public function indexAction()
     {
-        $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAll();
-
+        $brands = $this->getDoctrine()->getRepository('AppBundle:Brand')->findAllWithCustomer();
         return $this->render('brands/index.html.twig',Array('brands'=>$brands));
     }
 

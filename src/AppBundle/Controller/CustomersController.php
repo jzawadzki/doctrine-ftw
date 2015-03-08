@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Customer;
+use AppBundle\Entity\CustomerRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,10 +14,7 @@ class CustomersController extends Controller
      */
     public function indexAction()
     {
-        $customers = $this->getDoctrine()->getManager()->createQuery('SELECT c FROM AppBundle:Customer c')
-            ->setMaxResults(50)
-            ->getResult();
-
+        $customers = $this->getDoctrine()->getManager()->getRepository('AppBundle:Customer')->getAllCustomers();
         return $this->render('customers/index.html.twig',Array('customers'=>$customers));
     }
 
